@@ -3,15 +3,19 @@
 
 # 1. Configuración obligatoria para la RAÍZ de Chatwoot (Panel de administración)
 location / {
-	proxy_pass http://127.0.0.1:3000;
-	# CRUCIAL: Fuerza a Nginx a no descartar el token de Botpress
-	proxy_pass_header Authorization;
-	proxy_set_header Authorization $http_authorization;
+    # 1. Aseguramos que pasamos la URL completa con todos sus parámetros (?api_access_token=...)
+    proxy_pass http://127.0.0.1:3000$is_args$args;
 
-	proxy_set_header Host $host;
-	proxy_set_header X-Real-IP $remote_addr;
-	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	proxy_set_header X-Forwarded-Proto $scheme;
+    # 2. Permitimos explícitamente los headers con guiones bajos por si acaso
+    proxy_pass_request_headers on;
+    
+    # 3. Mapeos de seguridad estándar para proxies de Rails
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Ssl on;
+    proxy_set_header X-Forwarded-Port $server_port;
 }
 
 # 2. Configuración obligatoria para el TIEMPO REAL (WebSockets)
