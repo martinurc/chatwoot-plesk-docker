@@ -16,6 +16,13 @@ ll be ignored, please remove it to avoid potential confusion
  ✔ Container httpdocs-rails-1    Started
 ```
 
+Reiniciar todo desde cero (Limpieza profunda y violenta)
+
+    docker compose -f httpdocs/docker-compose.yaml -p httpdocs down
+
+    docker compose -f httpdocs/docker-compose.yaml -p httpdocs up -d --force-recreate
+
+
 ### El tigre Rack::Attack 
 
 Salta cuando hay muchas peticiones de una misma IP. Agregar en el .env
