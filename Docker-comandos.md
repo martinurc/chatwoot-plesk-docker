@@ -15,3 +15,5 @@ ll be ignored, please remove it to avoid potential confusion
  ✔ Container httpdocs-sidekiq-1  Started                                                                                  2.0s
  ✔ Container httpdocs-rails-1    Started
 ```
+
+[SMTP-logs-advice](SMTP-logs-advice.md)
