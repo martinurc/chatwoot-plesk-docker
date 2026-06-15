@@ -16,4 +16,10 @@ ll be ignored, please remove it to avoid potential confusion
  ✔ Container httpdocs-rails-1    Started
 ```
 
+### El tigre Rack::Attack 
+
+Salta cuando hay muchas peticiones de una misma IP. Agregar en el .env
+
+    RACK_ATTACK_WHITELISTED_IPS=IP1,IP2, etc
+
 [SMTP-logs-advice](SMTP-logs-advice.md)
