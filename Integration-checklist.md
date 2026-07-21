@@ -93,3 +93,33 @@ Step 6: Testing & Log Verification
         docker logs -f chatwoot_web_1 # or tail -f log/production.log
 
         Look for Webhooks::OutgoingWorker errors or 401 Unauthorized / 404 Not Found responses.
+
+
+DOCKER CONTENEDORES
+No necesitas tener httpdocs-base-1 encendido continuamente.
+
+Ese contenedor es lo que en Docker / Rails se denomina un contenedor de inicialización o utilitario (one-off container).
+¿Para qué sirve realmente httpdocs-base-1?
+
+Su única función es ejecutar tareas puntuales de configuración o mantenimiento cuando despliegas o actualizas la aplicación, como por ejemplo:
+
+    Ejecutar las migraciones de la base de datos (rails db:chatwoot_prepare o rails db:migrate).
+
+    Precompilar recursos estáticos (assets) si fuera necesario.
+
+    Crear el usuario administrador inicial la primera vez que instalas Chatwoot.
+
+Una vez que esas tareas se completan (o si la instalación ya está en producción y funcionando), el contenedor se detiene y es 100% normal que se quede en estado Exited (0).
+La arquitectura mínima activa de Chatwoot
+
+Para que tu entorno de Chatwoot esté 100% operativo en producción, solo necesitas tener activos en ejecución continua (Up) los siguientes contenedores:
+
+    httpdocs-rails-1: Atiende la interfaz web, el panel de administración, la API y los sockets de tiempo real.
+
+    httpdocs-sidekiq-1: Procesa la cola de tareas en segundo plano (incluyendo el envío de webhooks a Botpress y correos).
+
+    httpdocs_redis: Almacena las colas de trabajo y datos en caché.
+
+    PostgreSQL (ya sea un contenedor httpdocs_postgres o una base de datos externa): Guarda las conversaciones, usuarios y configuración.
+
+Si rails y sidekiq están encendidos y conectados a Redis y Postgres, tu Chatwoot funcionará a la perfección sin consumir RAM ni CPU innecesaria intentando mantener httpdocs-base-1 encendido. 
